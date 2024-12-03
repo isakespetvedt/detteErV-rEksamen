@@ -3,10 +3,304 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oppgave 4 - Gruppemedlem 1</title>
-    <!-- LØSES BARE HVIS MAN HAR JOBBET 2 ELLER 3 SAMMEN -->
+    <title>Loppemarked</title>
+    <style>
+        /* Layout for hovedseksjonen */
+        #market {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        /* Styling for varene som skal selges */
+        #things-for-sale {
+            flex: 3;
+            margin-right: 20px;
+        }
+
+        /* Styling for listen over varer som er tilgjengelig */
+        #items {
+            flex: 1;
+            margin-left: 20px;
+            border-left: 2px solid #ccc;
+            padding-left: 20px;
+        }
+
+        #items ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        #items li {
+            margin: 5px 0;
+        }
+
+        #items li.sold-out {
+            text-decoration: line-through;
+            color: grey;
+        }
+
+        /* Styling for boksene rundt varene */
+        .item-box {
+            margin: 10px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+            width: 150px;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .item-box img {
+            width: 100%;
+            height: auto;
+        }
+
+        /* Styling for salgsmålet */
+        #money500-goal {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        #money500-goal img {
+            width: 100px;
+            height: auto;
+            margin-right: 10px;
+        }
+
+        #money500-goal p {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        /* Styling for meldinger */
+        #user-message {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    
+    <h1>Loppemarked</h1>
+
+    <!-- Seksjon som viser salg og hva som mangler for å nå målet -->
+    <div id="money500-goal">
+        <img src="images/fem-hundre-kroner.png" alt="500 NOK Bill">
+        <p id="total-sales">Total sold: 0 NOK (Goal: 500 NOK)</p>
+    </div>
+
+    <!-- Skjea for å legge til nye varer -->
+    <div>
+        <label for="new-item-name">Add item:</label>
+        <input id="new-item-name" type="text" placeholder="Item name">
+        <label for="new-item-price">Price:</label>
+        <input id="new-item-price" type="number" step="1" placeholder="Price">
+        <button id="add-new-to-market">Add</button>
+    </div>
+
+    <!-- Tilbakemelding -->
+    <div id="user-message"></div>
+
+    <!-- Hovedseksjon for marked -->
+    <div id="market">
+        <!-- Varer som er til salg -->
+        <div id="things-for-sale"></div>
+
+        <!-- Varer som er tilgejngelig -->
+        <div id="items">
+            <h2>Available Items:</h2>
+            <ul id="items-list"></ul>
+        </div>
+    </div>
+
+    <script>
+        // Lisste av varene som allerede er til salg i starten
+        let saleList = [
+            { name: "Blue Car", price: 350, image: "images/blue-car.png" },
+            { name: "Cat", price: 200, image: "images/cat.png" },
+            { name: "Cookie", price: 10, image: "images/cookie.jpg" }
+        ];
+
+        let totalEarnings = 0; 
+        const earningsGoal = 500;
+
+        // Liste for tilgjengelige varer som kan manuellt av bruker bli lagt til sagt
+        const itemsForSale = {
+            "blue car": "images/blue-car.png", // Bilde
+            "cat": "images/cat.png",
+            "cookie": "images/cookie.jpg",
+            "turtle": "images/eskilpadde.png",
+            "palm": "images/palm.jpg",
+            "pants": "images/pants.jpg",
+            "red car": "images/red-car.png",
+            "building": "images/building-2.png",
+        };
+
+        // Funksjon for å vise alle varene
+        function showCartItems() {
+            const cartArea = document.getElementById("things-for-sale");
+            cartArea.innerHTML = ""; // Tømmer for å oppdatere
+
+
+            // Boks rundt hver vare for at alt skal funke
+            for (let i = 0; i < saleList.length; i++) {
+                const item = saleList[i];
+                const itemBox = document.createElement("div");
+                itemBox.className = "item-box";
+                itemBox.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}">
+                    <p>${item.name}</p>
+                    <p>${item.price} NOK</p>
+                    <button data-index="${i}" class="sell-item">Sell</button>
+                    <button data-index="${i}" class="update-price">Change Price</button>
+                `;
+                cartArea.appendChild(itemBox);
+            }
+
+            updateItemsList();
+        }
+
+        // Funksjon for å oppdatere listen over tilgjengelige varer
+        function updateItemsList() {
+            const itemsList = document.getElementById("items-list");//Henter tiljgengelige items
+            itemsList.innerHTML = ""; // Fjerner en dobbel liste
+
+            // Legger til hver vare i listen
+            for (let name in itemsForSale) { // Ser gjennom alle varene
+                if (itemsForSale.hasOwnProperty(name)) { // Ser om varen er med i itemsForSale
+                    const listItem = document.createElement("li"); //Lager ny liste
+                    listItem.textContent = capitalizeWords(name);
+
+                    // Viser at varer som allerede er til salgs i butikken er utsolgt etter den blir solgt
+                    if (saleList.some(item => item.name.toLowerCase() === name)) {
+                        listItem.classList.add("sold-out"); // Merker at varene er solgt ut
+                    }
+
+                    itemsList.appendChild(listItem);
+                }
+            }
+        }
+
+        // Funksjon for å legge til nye varer
+        function addNewItem() {
+            const itemNameInput = document.getElementById("new-item-name").value.trim();
+            const itemPriceInput = document.getElementById("new-item-price").value;
+
+            // Feilmelding hvis du har glemt å skrive enten navn eller pris
+            if (!itemNameInput || !itemPriceInput) { // Ser om enten navn eller pris er feil
+                showUserMessage("Please fill in both name and price.", "red"); //Viser
+                return;
+            }
+
+            const itemName = itemNameInput.toLowerCase();
+            const itemPrice = Number(itemPriceInput);
+
+            // Ser om prisen er positiv eller ikke (funker kun hvis det er positivt tall)
+            if (isNaN(itemPrice) || itemPrice <= 0) { // Er prisen positiv?
+                showUserMessage("Price mus be a positive number", "red"); //Feil melding
+                return;
+            }
+
+            // Ser om varen finnes på listen av varer eller ikke
+            if (!itemsForSale[itemName]) { // Ser om varen er en del av tilgjengelige varer
+                showUserMessage(`"${capitalizeWords(itemName)}" is not available for sale`, "red");
+                return;
+            }
+
+            // Ser om varen eller ligger i listen (hvis den gjør går det ikke an å legge til en gang til)
+            const alreadyInCart = saleList.some(item => item.name.toLowerCase() === itemName);
+            if (alreadyInCart) {
+                showUserMessage(`"${capitalizeWords(itemName)}" is already added.`, "orange");
+                return;
+            }
+
+            // Legger til nye varer
+            saleList.push({ //Legger til ny vare så at jeg kan selge den
+                name: capitalizeWords(itemName),
+                price: itemPrice, 
+                image: itemsForSale[itemName]
+            });
+
+            showUserMessage(`${capitalizeWords(itemName)} added to the cart!`, "green");
+            showCartItems(); 
+            document.getElementById("new-item-name").value = ""; 
+            document.getElementById("new-item-price").value = ""; 
+        }
+
+        // Funksjon for å selge varen
+        function sellItem(index) {
+            const item = saleList[index];
+            totalEarnings += item.price; // Legger til prisen varen blir solgt for til totale earnings
+            saleList.splice(index, 1); // Fjerner varen
+            showUserMessage(`${item.name} sold for ${item.price} NOK!`, "green");
+            showCartItems();
+            updateEarnings();
+
+            if (totalEarnings >= earningsGoal) {
+                showUserMessage("Congratulations! You reached the goal!", "blue");
+            }
+        }
+
+        // Funksjon for å oppdatere prisen på en vare
+        function updatePrice(index) {
+            const item = saleList[index];
+            const newPrice = Number(prompt(`New price for ${item.name}:`, item.price));
+
+            // Ser om nye prisen er positiv
+            if (isNaN(newPrice) || newPrice <= 0) {
+                showUserMessage("Invalid price. Changes not saved.", "red");
+                return;
+            }
+            item.price = newPrice; // Oppdaterer prisen
+            showCartItems();
+        }
+
+        // Oppdaterer totale earnings
+        function updateEarnings() {
+            document.getElementById("total-sales").textContent = `Total sold: ${totalEarnings} NOK (Goal: ${earningsGoal} NOK)`;
+        }
+
+        // Melding til brukeren
+        function showUserMessage(message, color = "red") {
+            const userMessageBox = document.getElementById("user-message");
+            userMessageBox.textContent = message;
+            userMessageBox.style.color = color;
+
+            // Gjør at teksten ikke går vekk før lenge så basially den går aldri vekk
+            setTimeout(function() {
+                userMessageBox.textContent = "";
+            }, 10000000000);
+        }
+
+        // Stor bokstav på første ord på alle ord
+            function capitalizeWords(string) {
+        let result = "";
+        string.split(" ").forEach((word, index) => {
+            if (index > 0) {
+                result += " ";
+            }
+            result += word.charAt(0).toUpperCase() + word.slice(1);
+        });
+        return result;
+    }
+
+        // For å legge til nye varer fra listen
+        document.getElementById("add-new-to-market").onclick = function() {
+            addNewItem();
+        };
+
+        document.body.onclick = function(event) {
+            if (event.target.classList.contains("sell-item")) {
+                sellItem(Number(event.target.getAttribute("data-index")));
+            } else if (event.target.classList.contains("update-price")) {
+                updatePrice(Number(event.target.getAttribute("data-index")));
+            }
+        };
+
+        updateEarnings(); 
+        showCartItems(); 
+        updateItemsList(); 
+    </script>
 </body>
 </html>
