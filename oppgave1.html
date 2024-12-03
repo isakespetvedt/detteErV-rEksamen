@@ -52,10 +52,10 @@
     <!-- IKKE LOV Å ENDRE NOE SOM HELST AV DENNE HTML'en! -->
 
     <script>
-    // Initialize the number of gifts left to give
+    //how many gift are remaining to give to the baby
     let remainingGifts = 3;
 
-    // Keep track of the positions of the gifts
+    // Keeps track of the given gift
     let givenGifts = [];
 
     // Function to update the "Antall ting igjen" text
@@ -77,7 +77,7 @@
     // Function to show happiness effect
     function showHappiness() {
       const baby = document.getElementById("jlpb");
-      baby.style.transition = "transform 0.5s";
+      baby.style.transition = "transform 0.5s"; 
       baby.style.transform = "scale(1.2)"; // Slightly enlarge the baby
 
 
@@ -90,13 +90,14 @@
     // Function to give the baby one gift
     function giveGift() {
       const giftInput = document.getElementById("gft-txt");
-      const giftName = giftInput.value.trim().toLowerCase(); // Normalize input
+      const giftName = giftInput.value.trim().toLowerCase(); // makse the input always lowercase.
       const gifts = {
-        katt: document.getElementById("tac-x"),
-        skilpadde: document.getElementById("eddap-x"),
-        bygning: document.getElementById("gnidliub-x"),
+        katt: document.getElementById("tac-x"), //gives element the name Katt
+        skilpadde: document.getElementById("eddap-x"),//gives element the name skilpadde
+        bygning: document.getElementById("gnidliub-x"),//gives element the name Bygning
       };
 
+      //gives gifts the name of the desired name and looks att how many gifts remain
       if (gifts[giftName] && remainingGifts > 0) {
         const gift = gifts[giftName];
 
@@ -111,14 +112,18 @@
           // Decrease the remaining gift count
           remainingGifts--;
           updateRemainingGifts();
-        } else {
+        }
+        //alert for gifta allready given to the baby
+        else {
           alert("Denne gaven er allerede gitt til babyen!");
         }
-      }else{
+      }
+      //alerts if the object is not a valid gift for the Baby
+      else{
         alert(`${giftName} er ikke en gyldig gave`);
       }
 
-      // Clear the input field
+      // Clears the gifts from the baby
       giftInput.value = "";
     }
 
