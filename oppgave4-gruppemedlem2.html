@@ -1,12 +1,274 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oppgave 4 - Gruppemedlem 2</title>
-    <!-- LØSES BARE HVIS MAN HAR JOBBET 2 ELLER 3 SAMMEN -->
-</head>
-<body>
-    
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Oppgave 4 - Cats vs Baby</title>
+    <!--tok inspirasjon fra arbeidskravet-->
+
+    <!--Jonas Storli-->
+    <style>
+        
+      /* --- Just the main styles --- */
+      body {
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+        background-color: #3b4d72;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .main-container {
+        border: 2px solid #000;
+        width: 1366px;
+        height: 768px;
+        background: url("images/battelArena.jpg") no-repeat center;
+        background-size: cover;
+        position: relative;
+        border-radius: 5px;
+      }
+      /* Health bar container */
+      .healthbar-container {
+        margin-left: 10px;
+        margin-top: 5px;
+        width: 300px;
+        height: 50px;
+        border: 2px solid #ffffff;
+        border-radius: 14px;
+        margin-bottom: 10px;
+      }
+
+      .healthbar {
+        position: relative;
+        height: 100%;
+        background-color: #0f0;
+        border-radius: 12px;
+        max-width: 300px;
+        max-height: 50px;
+        color: rgb(176, 19, 19);
+
+      }
+
+      #fluffycat {
+        position: absolute;
+        top: 30%;
+        left: 14%;
+        transform: scaleX(-1);
+      }
+
+      #nissecat {
+        position: absolute;
+        top: 60%;
+        left: 12%;
+        
+      }
+
+      #Baby {
+        position: absolute;
+        top: 100%;
+        right: 70%;
+        width: 400px;
+      }
+
+      .img:hover {
+        transform: scale(1.1);
+        cursor: pointer;
+      }
+     
+
+
+
+      #message-container {
+        position: absolute;
+        top: 10%;
+        font-size: 30px;
+        margin: 20px 0;
+        color: #dddddd;
+        z-index: 10;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="message-container"></div>
+    <div class="main-container">
+      <!-- Cats health bars -->
+      <div id="cats-health-bars">
+        <div class="healthbar-container">
+          <div id="fluffycat-health" class="healthbar"></div>
+          <img class="img" id="fluffycat" src="/images/cat.jpg" alt="fluffycat" />
+        </div>
+        <div class="healthbar-container">
+          <div id="nissecat-health" class="healthbar"></div>
+          <img class="img" id="nissecat" src="images/cat.png" alt="nissecat" />
+        </div>
+      </div>
+
+      <!-- Baby health bar -->
+      <div
+        class="healthbar-container"
+        style="position: absolute; right: 10px; top: 10px"
+      >
+        <div id="baby-health" class="healthbar"></div>
+        <img id="Baby" src="images/jlpb.png" alt="Baby" />
+      </div>
+
+      <button id="reset-btn" class="reset-btn" style="display: none">
+        Restart Game
+      </button>
+    </div>
+
+    <script>
+      // Initialize game data
+      const cats = [
+        { name: "Mittens", maxHp: 600, hp: 600, damege: 400 },
+        { name: "Keneth", maxHp: 700, hp: 700, damege: 600 },
+      ];
+
+      const baby = { name: "Arcam Asylum Baby", maxHp: 3000, hp: 3000, damege: 250 };
+
+      // Update health bars visually and hide elements if their health is 0
+      function updateHealthbars() {
+        const fluffycatHealthbar = document.getElementById("fluffycat-health");
+        const nissecatHealthbar = document.getElementById("nissecat-health");
+        const babyHealthbar = document.getElementById("baby-health");
+
+        // Update widths
+        fluffycatHealthbar.style.width = (cats[0].hp / cats[0].maxHp) * 100 + "%";
+        nissecatHealthbar.style.width = (cats[1].hp / cats[1].maxHp) * 100 + "%";
+        babyHealthbar.style.width = (baby.hp / baby.maxHp) * 100 + "%";
+
+        // Hide elements if health reaches 0
+        if (cats[0].hp <= 0) {
+          document.getElementById("fluffycat").style.display = "none";
+        }
+
+        if (cats[1].hp <= 0) {
+          document.getElementById("nissecat").style.display = "none";
+        }
+
+        if (baby.hp <= 0) {
+          document.getElementById("Baby").style.display = "none";
+        }
+
+        updateHealthNummer();
+
+        function updateHealthNummer(){
+            const fluffycatNummer = `Mittens ${cats[0].hp} / ${cats[0].maxHp}` ;
+            document.getElementById("fluffycat-health").textContent = fluffycatNummer;
+
+            // Update nissecat's health Nummer
+            const nissecatNummer = `Keneth ${cats[1].hp} / ${cats[1].maxHp}`;
+             document.getElementById("nissecat-health").textContent = nissecatNummer;
+             
+
+             // Update baby's health Nummer
+             const babyNummer = `Arcum Asylum Baby ${baby.hp} / ${baby.maxHp}`;
+            document.getElementById("baby-health").textContent = babyNummer;
+        }
+
+        if (cats[0].hp <= 0 && cats[1].hp <= 0) {
+          console.log("All cats are defeated!");
+          alert("Alle kattene har døua, Arcum Asylum Baby vinnere denne!");
+
+          // Reload the page after a 2-second delay
+          setTimeout(() => {
+            location.reload(true);
+          }, 2000); // 2000ms = 2 seconds
+
+          // Make the reset button visible
+          document.getElementById("reset-btn").style.display = "none";
+
+         //resetter spillet etter 2 serkunder
+          setTimeout(() => {
+            resetGame();
+          }, 2000); // 2
+        }
+        if (baby.hp <= 0) {
+          console.log("Arcum Asylum Baby is defeated!");
+          alert("Arcum Asylum Baby har blit spist av katten!");
+
+          // Reload the page after a 2-second delay
+          setTimeout(() => {
+            location.reload(true);
+          }, 2000); // 2000ms = 4 second
+        }
+      }
+
+      // Cat attacks Baby
+      function catAttack(catIndex) {
+        if (cats[catIndex].hp <= 0 || baby.hp <= 0);
+
+        baby.hp -= cats[catIndex].damege;
+        if (baby.hp < 0) baby.hp = 0;
+
+        showMessage(
+          `${cats[catIndex].name} "hits" ${baby.name} "for" ${cats[catIndex].damege}!`);
+        updateHealthbars();
+
+        if (baby.hp <= 0) {
+          showMessage("Du drepte Baby, du er vinneren!");
+          document.getElementById("reset-btn").style.display = "none";
+        } else {
+          babyCounterAttack();
+        }
+      }
+
+      // Baby counterattacks
+      function babyCounterAttack() {
+        const aliveCats = cats.filter((cat) => cat.hp > 0);
+        if (!aliveCats.length) {
+          showMessage("alle kattene har døua, Arcum Asylum Baby vinnere denne!");
+          document.getElementById("reset-btn").style.display = "none";
+          
+        }
+
+        const target = aliveCats[Math.floor(Math.random() * aliveCats.length)];
+        target.hp -= baby.damege;
+        if (target.hp < 0) target.hp = 0;
+
+        showMessage(`${baby.name} attacks ${target.name} for ${baby.damege}!`);
+        updateHealthbars();
+      }
+
+      // Reset game
+      function resetGame() {
+    for (let i = 0; i < cats.length; i++) {
+        cats[i].hp = cats[i].maxHp;
+    }
+
+
+    baby.hp = baby.maxHp;
+    updateHealthbars();
+    showMessage("");
+    document.getElementById("reset-btn").style.display = "none";
+}
+
+      // Show message
+      function showMessage(melding) {
+        document.getElementById("message-container").innerText = melding;
+      }
+
+      // Show message
+  function showMessage(melding) {
+    document.getElementById("message-container").innerText = melding;
+  }
+
+  // Attach event handlers using element.onclick
+  document.getElementById("reset-btn").onclick = resetGame;
+
+  document.getElementById("fluffycat").onclick = function () {
+    catAttack(0);
+  };
+
+  document.getElementById("nissecat").onclick = function () {
+    catAttack(1);
+  };
+
+
+  updateHealthbars();
+      
+    </script>
+  </body>
 </html>
