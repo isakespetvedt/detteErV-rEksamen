@@ -1,12 +1,272 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oppgave 4 - Gruppemedlem 1</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Oppgave 4 - cats vs baby: Jonas</title>
+    <link rel="stylesheet" href="oppgave4jonas.css" />
     <!-- LØSES BARE HVIS MAN HAR JOBBET 2 ELLER 3 SAMMEN -->
-</head>
-<body>
-    
-</body>
+  </head>
+  <body>
+
+    <div id="message-container" style="padding: 10px; font-size: 18px; font-weight: bold; color: #333; text-align: center;"></div>
+
+    <div class="main-container">
+      <div id="cats-Health-Container">
+        <!-- Cat1 stats -->
+        <div class="healthbar-container">
+          <div id="cat1-health" class="healthbar"></div>
+          <div class="text-container">
+            <p id="cat1-name-txt">Mittens</p>
+            <p id="cat1-health-txt">400 / 400 HP</p>
+          </div>
+        </div>
+
+        <!-- Cat2 health bar and stats -->
+        <div class="healthbar-container">
+          <div id="cat2-health" class="healthbar"></div>
+          <div class="text-container">
+            <p id="cat2-name-txt">Keneth</p>
+            <p id="cat2-health-txt">600 / 600 HP</p>
+          </div>
+        </div>
+
+        <!-- Reset button container -->
+        <div class="reset-container">
+          <button id="reset-btn">Restart Game</button>
+        </div>
+      </div>
+
+      <!-- Babys health bar and stats -->
+      <div class="baby-health-container">
+        <div class="healthbar-container">
+          <div id="baby-health" class="healthbar"></div>
+          <div class="text-container">
+            <p id="baby-name-txt">arcam asylum Baby</p>
+            <div id="baby-health-txt" class="text-container">
+              1700 / 1700 HP
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero image containers (clickable) -->
+      <div id="cat1" class="img-container">
+        <img class="cats" src="images/cat.png" alt="cat1" />
+      </div>
+      <div id="cat2" class="img-container">
+        <img class="cats" src="images/cat.jpg" alt="cat2" />
+      </div>
+
+      <!-- Baby image container -->
+      <div id="baby" class="img-container">
+        <img id="baby-img" src="images/jlpb.png" alt="Baby" />
+      </div>
+
+      <!-- Game won or-->
+      <div id="game-message-container"></div>
+    </div>
+
+    <script>
+      // Predefined hero stats and game logic
+
+      let catArray = [
+        {
+          id: 0,
+          name: "Mittens",
+          maxHP: 600,
+          currentHP: 600,
+          damage: 500,
+          alive: true,
+        },
+        {
+          id: 1,
+          name: "Keneth",
+          maxHP: 600,
+          currentHP: 600,
+          damage: 400,
+          alive: true,
+        },
+      ];
+
+      let babyStats = {
+        name: "Arcem Asylum Baby",
+        maxHP: 1700,
+        currentHP: 1700,
+        damage: 200,
+        alive: true,
+      };
+
+      // Selectors for clickable hero images
+      const Cat1 = document.getElementById("cat1");
+      const Cat2 = document.getElementById("cat2");
+
+      // Selector for clickable baby image
+      const Baby = document.getElementById("Baby");
+
+      // Selectors for hero names and health text (for updating dynamically)
+      const cat1Name = document.getElementById("cat1-name-txt");
+      const cat2Name = document.getElementById("cat2-name-txt");
+      const babyName = document.getElementById("baby-name-txt");
+
+      // Selectors for hero health text (for updating HP display)
+      const cat1HealthTxt = document.getElementById("cat1-health-txt");
+      const cat2HealthTxt = document.getElementById("cat2-health-txt");
+
+      // Selector for baby's health text
+      const babyHealthTxt = document.getElementById("baby-health-txt");
+
+      // Selectors for health bars (for updating HP visually)
+      const cat1HealthBar = document.getElementById("cat1-health");
+      const cat2HealthBar = document.getElementById("cat2-health");
+      const babyHealthBar = document.getElementById("baby-health");
+
+
+      function showMessage(message) {
+        const messageContainer = document.getElementById("message-container");
+        messageContainer.textContent = message;
+      }
+
+      // Function to update the health bars and health text
+      function updateHealthBars() {
+        // Update health bar width and ensure HP doesn't go below zero
+        cat1HealthBar.style.width =
+          Math.max((catArray[0].currentHP / catArray[0].maxHP) * 300, 0) + "px";
+        cat2HealthBar.style.width =
+          Math.max((catArray[1].currentHP / catArray[1].maxHP) * 300, 0) + "px";
+        babyHealthBar.style.width =
+          Math.max((babyStats.currentHP / babyStats.maxHP) * 300, 0) + "px";
+
+        // Update health text
+        cat1HealthTxt.textContent = `${catArray[0].currentHP} / ${catArray[0].maxHP} HP`;
+        cat2HealthTxt.textContent = `${catArray[1].currentHP} / ${catArray[1].maxHP} HP`;
+        babyHealthTxt.textContent = `${babyStats.currentHP} / ${babyStats.maxHP} HP`;
+
+        // Hide cat or baby if they are dead
+        if (catArray[0].currentHP <= 0) {
+          document.getElementById("cat1").style.display = "none"; // Hide cat1
+        } else {
+          document.getElementById("cat1").style.display = "block"; // Show cat1 if alive
+        }
+
+        if (catArray[1].currentHP <= 0) {
+          document.getElementById("cat2").style.display = "none"; // Hide cat2
+        } else {
+          document.getElementById("cat2").style.display = "block"; // Show cat2 if alive
+        }
+
+        if (babyStats.currentHP <= 0) {
+          document.getElementById("baby").style.display = "none"; // Hide baby
+        } else {
+          document.getElementById("baby").style.display = "block"; // Show baby if alive
+        }
+
+        // Function to update health bar color based on current health
+        function updateHealthBarColor(healthBar, currentHP, maxHP) {
+          const healthPercentage = currentHP / maxHP; // Calculate health percentage (0 to 1)
+          const red = Math.round((1 - healthPercentage) * 255); // Red value increases as health decreases
+          const green = Math.round(healthPercentage * 255); // Green value decreases as health decreases
+          healthBar.style.backgroundColor = `rgb(${red}, ${green}, 0)`; // Set background color
+        }
+
+        // Update health bar colors
+        updateHealthBarColor(
+          cat1HealthBar,
+          catArray[0].currentHP,
+          catArray[0].maxHP
+        );
+        updateHealthBarColor(
+          cat2HealthBar,
+          catArray[1].currentHP,
+          catArray[1].maxHP
+        );
+        updateHealthBarColor(
+          babyHealthBar,
+          babyStats.currentHP,
+          babyStats.maxHP
+        );
+      }
+
+      // Function to show the reset button
+      function showResetButton() {
+        const resetBtn = document.getElementById("reset-btn");
+        resetBtn.style.display = "block"; // Make the reset button visible
+      }
+
+      // Function to handle hero attack
+      function catAttack(hero) {
+        if (!hero.alive) return; // Return if the hero is dead
+
+        babyStats.currentHP -= hero.damage; // Subtract hero's damage from baby's current HP
+        if (babyStats.currentHP <= 0) babyStats.currentHP = 0; // Prevent negative health
+
+        alert(
+          `${hero.name} har gjort ${hero.damage} skade på ${babyStats.name}!`
+        );
+        updateHealthBars(); // Update health bars after attack
+
+        if (babyStats.currentHP <= 0) {
+          alert("Gratulerer, du har vunnet spillet!");
+          showResetButton(); // Show reset button when the game is won
+          return; // End the game
+        }
+
+        babyAttack(); // baby counter-attack
+      }
+
+      // Function for baby attack
+      function babyAttack() {
+        const alivecat = catArray.filter((hero) => hero.alive); // Get alive cat
+        if (alivecat.length === 0) return; // No cat to attack
+
+        const randomHero =
+          alivecat[Math.floor(Math.random() * alivecat.length)]; // Randomly select an alive hero
+        randomHero.currentHP -= babyStats.damage; // Subtract baby's damage from hero's current HP
+        if (randomHero.currentHP <= 0) {
+          randomHero.currentHP = 0; // Prevent negative health
+          randomHero.alive = false; // Mark cat as dead
+        }
+
+        alert(`${babyStats.name} har angrepet ${randomHero.name}!`);
+        updateHealthBars(); // Update health bars immediately
+
+        // Check if all cat are dead
+        const allcatDead = catArray.every((hero) => !hero.alive);
+        if (allcatDead && babyStats.currentHP > 0) {
+          alert(`Spillet er tapt! ${babyStats.name} har vunnet!`);
+          showResetButton(); // Show reset button when the game is lost
+        }
+      }
+
+      // Function to reset the game
+      function resetGame() {
+        // Reset baby stats
+        babyStats.currentHP = babyStats.maxHP;
+        babyStats.alive = true;
+
+        // Reset cat stats
+        catArray.forEach((hero) => {
+          hero.currentHP = hero.maxHP;
+          hero.alive = true;
+        });
+
+        // Update UI
+        updateHealthBars();
+        resetBtn.style.display = "none"; // Hide the reset button again
+      }
+
+      // Event listener for reset button
+      const resetBtn = document.getElementById("reset-btn");
+      resetBtn.addEventListener("click", resetGame);
+
+      // Attach click event to cat
+      cat1.addEventListener("click", () => catAttack(catArray[0]));
+      cat2.addEventListener("click", () => catAttack(catArray[1]));
+      warrior.addEventListener("click", () => catAttack(catArray[2]));
+
+      // Initial health bar update
+      updateHealthBars();
+      resetBtn.style.display = "none"; // Initially hide the reset button
+    </script>
+  </body>
 </html>
