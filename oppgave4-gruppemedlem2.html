@@ -7,88 +7,83 @@
     <!--tok inspirasjon fra arbeidskravet-->
 
     <!--Jonas Storli-->
-    <style>
-        
-      /* --- Just the main styles --- */
-      body {
-        height: 100vh;
-        margin: 0;
-        padding: 0;
-        background-color: #3b4d72;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
+<style>
+    /* --- Just the main styles --- */
+body {
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    background-color: #3b4d72;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-      .main-container {
-        border: 2px solid #000;
-        width: 1366px;
-        height: 768px;
-        background: url("images/battelArena.jpg") no-repeat center;
-        background-size: cover;
-        position: relative;
-        border-radius: 5px;
-      }
-      /* Health bar container */
-      .healthbar-container {
-        margin-left: 10px;
-        margin-top: 5px;
-        width: 300px;
-        height: 50px;
-        border: 2px solid #ffffff;
-        border-radius: 14px;
-        margin-bottom: 10px;
-      }
+.main-container {
+    border: 2px solid #000;
+    width: 1366px;
+    height: 768px;
+    background: url("images/battelArena.jpg") no-repeat center;
+    background-size: cover;
+    position: relative;
+    border-radius: 5px;
+}
+    /* Health bar container */
+.healthbar-container {
+    margin-left: 10px;
+    margin-top: 5px;
+    width: 300px;
+    height: 50px;
+    border: 2px solid #ffffff;
+    border-radius: 14px;
+    margin-bottom: 10px;
+}
 
-      .healthbar {
-        position: relative;
-        height: 100%;
-        background-color: #0f0;
-        border-radius: 12px;
-        max-width: 300px;
-        max-height: 50px;
-        color: rgb(176, 19, 19);
+.healthbar {
+    position: relative;
+    height: 100%;
+    background-color: #0f0;
+    border-radius: 12px;
+    max-width: 300px;
+    max-height: 50px;
+    color: rgb(176, 19, 19);
+}
 
-      }
+#fluffycat {
+    position: absolute;
+    top: 30%;
+    left: 14%;
+    transform: scaleX(-1);
+}
 
-      #fluffycat {
-        position: absolute;
-        top: 30%;
-        left: 14%;
-        transform: scaleX(-1);
-      }
+#nissecat {
+    position: absolute;
+    top: 60%;
+    left: 12%;
+}
 
-      #nissecat {
-        position: absolute;
-        top: 60%;
-        left: 12%;
-        
-      }
+#Baby {
+    position: absolute;
+    top: 100%;
+    right: 70%;
+    width: 400px;
+}
 
-      #Baby {
-        position: absolute;
-        top: 100%;
-        right: 70%;
-        width: 400px;
-      }
+.img:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+}
 
-      .img:hover {
-        transform: scale(1.1);
-        cursor: pointer;
-      }
-     
-
-
-
-      #message-container {
-        position: absolute;
-        top: 10%;
-        font-size: 30px;
-        margin: 20px 0;
-        color: #dddddd;
-        z-index: 10;
-      }
-    </style>
+    /*attack massage style*/
+#message-container {
+    position: absolute;
+    top: 10%;
+    font-size: 30px;
+    margin: 20px 0;
+    color: #dddddd;
+    z-index: 10;
+}
+</style>
   </head>
   <body>
     <div id="message-container"></div>
@@ -97,7 +92,12 @@
       <div id="cats-health-bars">
         <div class="healthbar-container">
           <div id="fluffycat-health" class="healthbar"></div>
-          <img class="img" id="fluffycat" src="/images/cat.jpg" alt="fluffycat" />
+          <img
+            class="img"
+            id="fluffycat"
+            src="/images/cat.jpg"
+            alt="fluffycat"
+          />
         </div>
         <div class="healthbar-container">
           <div id="nissecat-health" class="healthbar"></div>
@@ -113,33 +113,36 @@
         <div id="baby-health" class="healthbar"></div>
         <img id="Baby" src="images/jlpb.png" alt="Baby" />
       </div>
-
-      <button id="reset-btn" class="reset-btn" style="display: none">
-        Restart Game
-      </button>
     </div>
 
     <script>
-      // Initialize game data
-      const cats = [
+      // stats of the cats
+      let cats = [
         { name: "Mittens", maxHp: 600, hp: 600, damege: 400 },
         { name: "Keneth", maxHp: 700, hp: 700, damege: 600 },
       ];
+      //stats of the Baby
+      let baby = {
+        name: "Arcam Asylum Baby",
+        maxHp: 3000,
+        hp: 3000,
+        damege: 250,
+      };
 
-      const baby = { name: "Arcam Asylum Baby", maxHp: 3000, hp: 3000, damege: 250 };
-
-      // Update health bars visually and hide elements if their health is 0
+      //
       function updateHealthbars() {
-        const fluffycatHealthbar = document.getElementById("fluffycat-health");
-        const nissecatHealthbar = document.getElementById("nissecat-health");
-        const babyHealthbar = document.getElementById("baby-health");
+        let fluffycatHealthbar = document.getElementById("fluffycat-health");
+        let nissecatHealthbar = document.getElementById("nissecat-health");
+        let babyHealthbar = document.getElementById("baby-health");
 
-        // Update widths
-        fluffycatHealthbar.style.width = (cats[0].hp / cats[0].maxHp) * 100 + "%";
-        nissecatHealthbar.style.width = (cats[1].hp / cats[1].maxHp) * 100 + "%";
+        // dynamisk health bar
+        fluffycatHealthbar.style.width =
+          (cats[0].hp / cats[0].maxHp) * 100 + "%";
+        nissecatHealthbar.style.width =
+          (cats[1].hp / cats[1].maxHp) * 100 + "%";
         babyHealthbar.style.width = (baby.hp / baby.maxHp) * 100 + "%";
 
-        // Hide elements if health reaches 0
+        // Hide elements if health reaches <=0
         if (cats[0].hp <= 0) {
           document.getElementById("fluffycat").style.display = "none";
         }
@@ -152,22 +155,23 @@
           document.getElementById("Baby").style.display = "none";
         }
 
+        //adds health knowlage curranthp and max
         updateHealthNummer();
+        function updateHealthNummer() {
+          let fluffycatNummer = `Mittens ${cats[0].hp} / ${cats[0].maxHp}`;
+          document.getElementById("fluffycat-health").textContent =
+            fluffycatNummer;
 
-        function updateHealthNummer(){
-            const fluffycatNummer = `Mittens ${cats[0].hp} / ${cats[0].maxHp}` ;
-            document.getElementById("fluffycat-health").textContent = fluffycatNummer;
+          // Update nissecats health Nummer
+          let nissecatNummer = `Keneth ${cats[1].hp} / ${cats[1].maxHp}`;
+          document.getElementById("nissecat-health").textContent =
+            nissecatNummer;
 
-            // Update nissecat's health Nummer
-            const nissecatNummer = `Keneth ${cats[1].hp} / ${cats[1].maxHp}`;
-             document.getElementById("nissecat-health").textContent = nissecatNummer;
-             
-
-             // Update baby's health Nummer
-             const babyNummer = `Arcum Asylum Baby ${baby.hp} / ${baby.maxHp}`;
-            document.getElementById("baby-health").textContent = babyNummer;
+          // Update babys health Nummer
+          let babyNummer = `Arcum Asylum Baby ${baby.hp} / ${baby.maxHp}`;
+          document.getElementById("baby-health").textContent = babyNummer;
         }
-
+        //if both cats hp <=0 reload page for new game
         if (cats[0].hp <= 0 && cats[1].hp <= 0) {
           console.log("All cats are defeated!");
           alert("Alle kattene har døua, Arcum Asylum Baby vinnere denne!");
@@ -180,11 +184,12 @@
           // Make the reset button visible
           document.getElementById("reset-btn").style.display = "none";
 
-         //resetter spillet etter 2 serkunder
+          //resetter spillet etter 2 serkunder
           setTimeout(() => {
             resetGame();
           }, 2000); // 2
         }
+        //if babys health hits <=0 reload page
         if (baby.hp <= 0) {
           console.log("Arcum Asylum Baby is defeated!");
           alert("Arcum Asylum Baby har blit spist av katten!");
@@ -199,14 +204,16 @@
       // Cat attacks Baby
       function catAttack(catIndex) {
         if (cats[catIndex].hp <= 0 || baby.hp <= 0);
-
+        //baby.hp minus catdamage
         baby.hp -= cats[catIndex].damege;
-        if (baby.hp < 0) baby.hp = 0;
+        if (baby.hp < 0) baby.hp = 0; //if
 
+        //info of what happend
         showMessage(
-          `${cats[catIndex].name} "hits" ${baby.name} "for" ${cats[catIndex].damege}!`);
+          `${cats[catIndex].name} "hits" ${baby.name} "for" ${cats[catIndex].damege}!`
+        );
         updateHealthbars();
-
+        //if baby.hp <=0 showmassage that you won. else baby attacks
         if (baby.hp <= 0) {
           showMessage("Du drepte Baby, du er vinneren!");
           document.getElementById("reset-btn").style.display = "none";
@@ -217,33 +224,32 @@
 
       // Baby counterattacks
       function babyCounterAttack() {
-        const aliveCats = cats.filter((cat) => cat.hp > 0);
+        let aliveCats = cats.filter((cat) => cat.hp > 0);
         if (!aliveCats.length) {
-          showMessage("alle kattene har døua, Arcum Asylum Baby vinnere denne!");
+          showMessage(
+            "alle kattene har døua, Arcum Asylum Baby vinnere denne!"
+          );
           document.getElementById("reset-btn").style.display = "none";
-          
         }
 
-        const target = aliveCats[Math.floor(Math.random() * aliveCats.length)];
+        let target = aliveCats[Math.floor(Math.random() * aliveCats.length)];
         target.hp -= baby.damege;
         if (target.hp < 0) target.hp = 0;
-
+        // showes what happends when baby
         showMessage(`${baby.name} attacks ${target.name} for ${baby.damege}!`);
         updateHealthbars();
       }
 
-      // Reset game
+      //after reset, cat health goes max
       function resetGame() {
-    for (let i = 0; i < cats.length; i++) {
-        cats[i].hp = cats[i].maxHp;
-    }
+        for (let i = 0; i < cats.length; i++) {
+          cats[i].hp = cats[i].maxHp;
+        }
 
-
-    baby.hp = baby.maxHp;
-    updateHealthbars();
-    showMessage("");
-    document.getElementById("reset-btn").style.display = "none";
-}
+        //sets babys health to max
+        baby.hp = baby.maxHp;
+        updateHealthbars();
+      }
 
       // Show message
       function showMessage(melding) {
@@ -251,24 +257,21 @@
       }
 
       // Show message
-  function showMessage(melding) {
-    document.getElementById("message-container").innerText = melding;
-  }
+      function showMessage(melding) {
+        document.getElementById("message-container").innerText = melding;
+      }
 
-  // Attach event handlers using element.onclick
-  document.getElementById("reset-btn").onclick = resetGame;
+      //click on kitten to beat baby
+      document.getElementById("fluffycat").onclick = function () {
+        catAttack(0);
+      };
 
-  document.getElementById("fluffycat").onclick = function () {
-    catAttack(0);
-  };
+      document.getElementById("nissecat").onclick = function () {
+        catAttack(1);
+      };
 
-  document.getElementById("nissecat").onclick = function () {
-    catAttack(1);
-  };
-
-
-  updateHealthbars();
-      
+      //updats health bars
+      updateHealthbars();
     </script>
   </body>
 </html>
