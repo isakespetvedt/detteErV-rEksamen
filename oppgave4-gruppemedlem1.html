@@ -272,17 +272,20 @@
             }, 10000000000);
         }
 
-        // Stor bokstav på første ord på alle ord
-        function capitalizeWords(string) {
-            let result = "";
-            string.split(" ").forEach((word, index) => {
-                if (index > 0) {
-                    result += " ";
-                }
-                result += word.charAt(0).toUpperCase() + word.slice(1);
-            });
-            return result;
-        }
+// Funksjon for å gjøre første bokstav i hvert ord stor
+function capitalizeWords(string) {
+    let words = string.split(" "); // Deler opp stringen i ord
+    let result = []; // Starter med en tom liste for resultat
+
+    for (let i = 0; i < words.length; i++) {
+        // Gjør første bokstav stor og legger til resten av ordet
+        let capitalizedWord = words[i].charAt(0).toUpperCase() + words[i].slice(1);
+        result.push(capitalizedWord); // Legger til ordet i resultatlisten
+    }
+
+    return result.join(" "); // Returnerer den endrede stringen som en setning
+}
+
 
         // For å legge til nye varer fra listen
         document.getElementById("add-new-to-market").onclick = function() {
