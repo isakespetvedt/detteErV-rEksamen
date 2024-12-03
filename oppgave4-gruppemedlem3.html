@@ -8,7 +8,7 @@
         #track {
             position: relative;
             width: 800px;
-            height: 200px;
+            height: 550px; /* Updated height to match the first document */
             border: 2px solid black;
             margin: auto;
             margin-top: 50px;
@@ -17,7 +17,7 @@
         }
         .car {
             position: absolute;
-            height: 50px;
+            height: 100px; /* Proportional size adjustment */
         }
         #car1 {
             top: 25%;
@@ -29,6 +29,12 @@
             text-align: center;
             margin-top: 20px;
         }
+        #winner-message {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 20px;
+            font-size: 1.5rem; /* Proportional font size adjustment */
+        }
     </style>
 </head>
 <body>
@@ -38,19 +44,20 @@
         <img id="car2" src="images/red-car.png" class="car" style="left: 0;">
     </div>
     <div class="controls">
-        <button onclick="startRace()">Start Race</button> 
-        <button onclick="resetRace()">Reset</button>
+        <button id="start-race-btn">Start Race</button>
+        <button id="reset-btn">Reset</button>
         <div style="margin-top: 20px;">
-            <button onclick="moveUserCar()">Move Your Car</button>
+            <button id="move-user-car-btn">Move Your Car</button>
         </div>
     </div>
-    <p id="winner-message" style="text-align: center; font-weight: bold; margin-top: 20px;"></p>
+    <p id="winner-message"></p>
 
     <script>
-        // Select cars
-        const cars = document.getElementsByTagName("img"); // it satisfies the 4 obligatory techniques//
-
-
+        // Select cars and buttons
+        const cars = document.getElementsByTagName("img");
+        const startRaceBtn = document.getElementById("start-race-btn");
+        const resetBtn = document.getElementById("reset-btn");
+        const moveUserCarBtn = document.getElementById("move-user-car-btn");
         const winnerMessage = document.getElementById("winner-message");
 
         // Race state
@@ -66,17 +73,16 @@
 
         // Function to move the user-controlled car
         function moveUserCar() {
-        const randomSpeed = Math.random() * 18; // Generate a random distance (adjust the range as needed)
-        positions[0] += randomSpeed; // Add the random distance to the car's position
-        cars[0].style.left = `${positions[0]}px`; // Update the car's position on the track
-        checkWinner(); // Check if the car has won after moving
+            const randomSpeed = Math.random() * 18; // Generate a random distance
+            positions[0] += randomSpeed; // Add the random distance to the car's position
+            cars[0].style.left = `${positions[0]}px`; // Update the car's position on the track
+            checkWinner(); // Check if the car has won after moving
         }
-
 
         // Start the race
         function startRace() {
             winnerMessage.textContent = ""; // Clear previous messages
-            raceInterval = setInterval(() => {
+            raceInterval = setInterval(function() {
                 // Move the opponent car
                 positions[1] = moveCar(positions[1]);
                 cars[1].style.left = `${positions[1]}px`;
@@ -114,6 +120,11 @@
         function stopRace() {
             clearInterval(raceInterval);
         }
+
+        // Attach event listeners to buttons
+        startRaceBtn.addEventListener("click", startRace);
+        resetBtn.addEventListener("click", resetRace);
+        moveUserCarBtn.addEventListener("click", moveUserCar);
     </script>
 </body>
 </html>
