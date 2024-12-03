@@ -34,9 +34,74 @@
 
 
 
-    <script>// HER SKAL DU/DERE KODE JAVASCRIPT (IKKE I EKSTERN FIL)!
+    <script> 
+    
+    // Initialize the number of gifts left to give
+    let remainingGifts = 3;
 
-        // bottom brukes for vertikal flytting - ref. JS for å stilsette elementer
+    // Function to update the "Antall ting igjen" text
+    function updateRemainingGifts() {
+        const remainingText = document.getElementById('llatna-x');
+        remainingText.textContent = `Antall ting igjen å gi babyen: ${remainingGifts}`;
+    }
+
+    // Function to give the baby a gift
+    function giveGift() {
+        const giftInput = document.getElementById('gft-txt');
+        const giftName = giftInput.value.trim().toLowerCase(); // Get the input and normalize it
+        const baby = document.getElementById('jlpb');
+
+        // Map input values to corresponding gift elements
+        const gifts = {
+            'katt': document.getElementById('tac-x'),
+            'skilpadde': document.getElementById('eddap-x'),
+            'bygning': document.getElementById('gnidliub-x'),
+        };
+
+        if (gifts[giftName] && remainingGifts > 0) {
+            // Place the gift near the baby
+            const gift = gifts[giftName];
+            gift.style.bottom = '150px';
+            gift.style.left = '300px';
+            remainingGifts--;
+
+            // Update the remaining gift count
+            updateRemainingGifts();
+        } else {
+            alert("Ugyldig gave eller ingen flere gaver igjen!");
+        }
+
+        // Clear the input field
+        giftInput.value = '';
+    }
+
+    // Function to reset the gifts
+    function resetGifts() {
+        const gifts = ['tac-x', 'eddap-x', 'gnidliub-x'];
+        gifts.forEach(id => {
+            const gift = document.getElementById(id);
+            gift.style.bottom = '0';
+            gift.style.left = '0';
+        });
+        remainingGifts = 3;
+        updateRemainingGifts();
+    }
+
+    // Attach event listener to the button
+    document.getElementById('give-gft-btn').addEventListener('click', giveGift);
+
+    // Initialize the remaining gifts text
+    updateRemainingGifts();
+
+    // Extra functionality: Add a reset button
+    const resetButton = document.createElement('button');
+    resetButton.textContent = 'Nullstill gaver';
+    resetButton.style.marginTop = '10px';
+    document.getElementById('inp').appendChild(resetButton);
+
+    resetButton.addEventListener('click', resetGifts);
+
+
         
         
 
