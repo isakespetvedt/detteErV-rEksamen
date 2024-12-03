@@ -3,95 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Racing Game</title>
+    <title>Bilspill</title>
     <style>
+        /* Spor (track) */
         #track {
             position: relative;
             width: 800px;
-            height: 200px;
+            height: 550px;
             border: 2px solid black;
             margin: auto;
             margin-top: 50px;
             overflow: hidden;
             background: lightgray;
         }
+        /* Bilene */
         .car {
             position: absolute;
-            height: 50px;
+            height: 100px;
         }
         #car1 {
-            top: 25%;
+            top: 25%; /* Justerer posisjonen til blå bil */
         }
         #car2 {
-            top: 75%;
+            top: 75%; /* Justerer posisjonen til rød bil */
+        }
+        /* Kontrollseksjon */
+        .controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+        /* Vinnerbeskjed */
+        #winner-message {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 20px;
+            font-size: 1.5rem;
         }
     </style>
 </head>
 <body>
-    <h1>Racing Game</h1>
+    <h1>Bilspill</h1> <!-- Overskrift -->
     <div id="track">
         <img id="car1" src="images/blue-car.png" class="car" style="left: 0;">
         <img id="car2" src="images/red-car.png" class="car" style="left: 0;">
     </div>
-    <div style="text-align: center; margin-top: 20px;">
-        <button id="start-race" onclick="startRace()">Start Race</button>
-        <button id="reset-race" onclick="resetRace()">Reset</button>
-        <p id="winner-message"></p>
+    <div class="controls">
+        <button id="start-race-btn">Start Løp</button>
+        <button id="reset-btn">Nullstill</button>
+        <div style="margin-top: 20px;">
+            <button id="move-user-car-btn">Flytt Din Bil</button>
+        </div>
     </div>
+    <p id="winner-message"></p>
 
     <script>
-        // Select elements using getElementsByTagName
-        const cars = document.getElementsByTagName("img");
-        const winnerMessage = document.getElementById("winner-message");
+        // Velg bilene og knappene
+        const biler = document.getElementsByTagName("img");
+        const startKnapp = document.getElementById("start-race-btn");
+        const nullstillKnapp = document.getElementById("reset-btn");
+        const flyttBilKnapp = document.getElementById("move-user-car-btn");
+        const vinnerMelding = document.getElementById("winner-message");
 
-        // Initialize race data
-        let positions = [0, 0]; // Array to track car positions
-        const trackWidth = 800 - cars[0].offsetWidth;
+        // Løpsstatus
+        let posisjoner = [0, 0]; // Posisjonene til bilene
+        const sporBredde = 800 - biler[0].offsetWidth;
+        let løpsInterval; // Interval for motstanderens bil
 
-        // Function to move a car and return its new position
-        function moveCar(position) {
-            const speed = Math.random() * 10; // Random speed
-            return position + speed;
+        // Funksjon for å flytte en bil med tilfeldig hastighet
+        function flyttBil(posisjon) {
+            const hastighet = Math.random() * 10; // Tilfeldig hastighet
+            return posisjon + hastighet;
         }
 
-        // Start Race function
-        function startRace() {
-            winnerMessage.textContent = ""; // Clear winner message
-            const interval = setInterval(() => {
-                // Update positions using moveCar
-                positions[0] = moveCar(positions[0]);
-                positions[1] = moveCar(positions[1]);
-
-                // Update car positions on the track
-                cars[0].style.left = `${positions[0]}px`;
-                cars[1].style.left = `${positions[1]}px`;
-
-                // Check for winner
-                if (positions[0] >= trackWidth || positions[1] >= trackWidth) {
-                    clearInterval(interval);
-                    declareWinner();
-                }
-            }, 50);
+        // Flytt spillerens bil manuelt
+        function flyttSpillerBil() {
+            const tilfeldigHastighet = Math.random() * 18; // Tilfeldig avstand
+            posisjoner[0] += tilfeldigHastighet;
+            biler[0].style.left = `${posisjoner[0]}px`; // Oppdater bilens posisjon
+            sjekkVinner(); // Sjekk om vi har en vinner
         }
 
-        // Reset race function
-        function resetRace() {
-            positions = [0, 0]; // Reset positions
-            cars[0].style.left = "0px";
-            cars[1].style.left = "0px";
-            winnerMessage.textContent = ""; // Clear winner message
+        // Start løpet
+        function startLøp() {
+            vinnerMelding.textContent = ""; // Fjern gammel melding
+            løpsInterval = setInterval(function() {
+                posisjoner[1] = flyttBil(posisjoner[1]); // Flytt motstanderens bil
+                biler[1].style.left = `${posisjoner[1]}px`;
+                sjekkVinner(); // Sjekk om motstanderen har vunnet
+            }, 100);
         }
 
-        // Function to declare the winner
-        function declareWinner() {
-            if (positions[0] >= trackWidth && positions[1] >= trackWidth) {
-                winnerMessage.textContent = "It's a tie!";
-            } else if (positions[0] >= trackWidth) {
-                winnerMessage.textContent = "Car 1 wins!";
-            } else {
-                winnerMessage.textContent = "Car 2 wins!";
+        // Nullstill løpet
+        function nullstillLøp() {
+            clearInterval(løpsInterval); // Stopp løpet
+            posisjoner = [0, 0]; // Nullstill posisjonene
+            for (let i = 0; i < biler.length; i++) {
+                biler[i].style.left = "0px"; // Flytt begge biler tilbake
+            }
+            vinnerMelding.textContent = ""; // Tøm vinnerbeskjed
+        }
+
+        // Sjekk hvem som har vunnet
+        function sjekkVinner() {
+            if (posisjoner[0] >= sporBredde && posisjoner[1] >= sporBredde) {
+                stoppLøp();
+                vinnerMelding.textContent = "Det er uavgjort!";
+            } else if (posisjoner[0] >= sporBredde) {
+                stoppLøp();
+                vinnerMelding.textContent = "Du vinner!";
+            } else if (posisjoner[1] >= sporBredde) {
+                stoppLøp();
+                vinnerMelding.textContent = "Motstanderen vinner!";
             }
         }
+
+        // Stopp løpet
+        function stoppLøp() {
+            clearInterval(løpsInterval); // Fjern intervallet
+        }
+
+        // Legg til eventhandlers uten addEventListener
+        startKnapp.onclick = startLøp;
+        nullstillKnapp.onclick = nullstillLøp;
+        flyttBilKnapp.onclick = flyttSpillerBil;
     </script>
 </body>
 </html>

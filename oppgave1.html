@@ -114,8 +114,8 @@
         } else {
           alert("Denne gaven er allerede gitt til babyen!");
         }
-      } else {
-        alert(`${giftName} er ikke blant de 3 gavene du kan gi babyen.`);
+      }else{
+        alert(`${giftName} er ikke en gyldig gave`);
       }
 
       // Clear the input field
@@ -142,7 +142,7 @@
 
     // Add a reset button dynamically
     const resetButton = document.createElement("button");
-    resetButton.textContent = "Nullstill gaver";
+    resetButton.textContent = "Stjel gaver";
     resetButton.style.marginTop = "10px";
     document.getElementById("inp").appendChild(resetButton);
 

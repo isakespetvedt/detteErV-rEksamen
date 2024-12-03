@@ -6,93 +6,115 @@
     <title>Oppgave 2</title>
 </head>
 <body>
-
     <div>
-
-        <!--  LEGG TIL HTML-koden som trengs for å løse oppgaven! -->
         <h3>Legg til filmer</h3>
-    <label for="movie-title">Film tittel:</label>
-    <input type="text" id="movie-title" placeholder="Skriv inn filmens tittel">
-    <br>
-    <label for="movie-year">År:</label>
-    <input type="text" id="movie-year" placeholder="Skriv inn utgivelsesåret">
-    <br>
-    <button id="add-movie-btn">Legg til film i array</button>
-    <button id="show-movies-btn">Vis alle filmer</button>
-    <div id="error-message" style="color: red; margin-top: 10px;"></div>
-    <div id="movies-list" style="margin-top: 20px;"></div>
 
-
+        <!-- Input for filmens tittel -->
+        <label for="movie-title">Film tittel:</label>
+        <input type="text" id="movie-title" placeholder="Skriv inn filmens tittel">
+        <!-- Input for kategori -->
+        <label for="movie-category">Kategori:</label>
+        <input type="text" id="movie-category" placeholder="Skriv inn kategori">
+        <br>
+        <!-- Input for år -->
+        <label for="movie-year">År:</label>
+        <input type="text" id="movie-year" placeholder="Skriv inn utgivelsesåret">
+        <br>
+        
+        <!-- Knappene for å legge til og vise filmer -->
+        <button id="add-movie-btn">Legg til film i array</button>
+        <button id="show-movies-btn">Vis alle filmer</button>
+        <div id="error-message" style="color: red; margin-top: 10px;"></div>
+        <div id="movies-list" style="margin-top: 20px;"></div>
     </div>
 
-    <script> 
-    // Array to store movie objects
-    const movies = [];
+    <script>
+        // Lager en liste for å holde filmdata
+        const filmer = [];
 
-    // Function to add a movie
-    function addMovie() {
-        const titleInput = document.getElementById('movie-title');
-        const yearInput = document.getElementById('movie-year');
-        const errorMessage = document.getElementById('error-message');
+        // Funksjon for å legge til en film i arrayet
+        function leggTilFilm() {
+            const tittelInput = document.getElementById('movie-title');
+            const årInput = document.getElementById('movie-year');
+            const kategoriInput = document.getElementById('movie-category');
+            const feilmelding = document.getElementById('error-message');
 
-        const title = titleInput.value.trim();
-        const year = yearInput.value.trim();
+            // Leser inn verdiene fra inputfeltene
+            const tittel = tittelInput.value.trim();
+            const år = årInput.value.trim();
+            const kategori = kategoriInput.value.trim();
 
-        // Input validation
-        if (!title || !year) {
-            errorMessage.textContent = "Vennligst fyll ut både tittel og år!";
-            return;
+            // Validering av feltene
+            if (tittel === '' || år === '' || kategori === '') {
+                feilmelding.textContent = "Vennligst fyll ut tittel, år og kategori!";
+                // Feilmelding forsvinner etter 3 sekunder
+                setTimeout(function() {
+                    feilmelding.textContent = '';
+                }, 3000);
+            } else {
+                // Fjerner feilmelding og legger til filmen i arrayet
+                feilmelding.textContent = '';
+                filmer.push({ tittel: tittel, år: år, kategori: kategori });
+
+                // Tømmer inputfeltene etter at filmen er lagt til
+                tittelInput.value = '';
+                årInput.value = '';
+                kategoriInput.value = '';
+            }
         }
 
-        // Clear error message
-        errorMessage.textContent = '';
+        // Funksjon for å vise filmene på skjermen
+        function visFilmer() {
+            const filmListe = document.getElementById('movies-list');
+            filmListe.innerHTML = ''; 
 
-        // Add movie to array
-        movies.push({ title, year });
-
-        // Clear inputs
-        titleInput.value = '';
-        yearInput.value = '';
-    }
-
-    // Function to display all movies
-    function displayMovies() {
-        const moviesList = document.getElementById('movies-list');
-        moviesList.innerHTML = ''; // Clear previous list
-
-        if (movies.length === 0) {
-            moviesList.textContent = "Ingen filmer lagt til.";
-            return;
+            // Hvis det ikke finnes noen filmer, vis en beskjed
+            if (filmer.length === 0) {
+                filmListe.textContent = "Ingen filmer lagt til.";
+            } else {
+                // Oppretter en liste av filmer
+                const ul = document.createElement('ul');
+                for (let i = 0; i < filmer.length; i++) {
+                    const li = document.createElement('li');
+                    li.textContent = `Tittel: ${filmer[i].tittel}, År: ${filmer[i].år}, Kategori: ${filmer[i].kategori}`;
+                    ul.appendChild(li);
+                }
+                filmListe.appendChild(ul);
+            }
         }
 
-        const ul = document.createElement('ul');
-        movies.forEach(movie => {
-            const li = document.createElement('li');
-            li.textContent = `${movie.title} (${movie.year})`;
-            ul.appendChild(li);
-        });
+        // Funksjon for å sortere filmene etter år
+        function sorterFilmer() {
+            for (let i = 0; i < filmer.length - 1; i++) {
+                for (let j = 0; j < filmer.length - i - 1; j++) {
+                    if (filmer[j].år > filmer[j + 1].år) {
+                        // Bytter plass på filmene hvis nødvendig
+                        const temp = filmer[j];
+                        filmer[j] = filmer[j + 1];
+                        filmer[j + 1] = temp;
+                    }
+                }
+            }
+            // Oppdaterer listen etter sortering
+            visFilmer();
+        }
 
-        moviesList.appendChild(ul);
-    }
+        // Legger til hendelseshåndterere
+        const leggTilKnapp = document.getElementById('add-movie-btn');
+        const visFilmerKnapp = document.getElementById('show-movies-btn');
+        const sorterKnapp = document.createElement('button');
 
-    // Attach event listeners to buttons
-    document.getElementById('add-movie-btn').addEventListener('click', addMovie);
-    document.getElementById('show-movies-btn').addEventListener('click', displayMovies);
+        // Bruker onclick i JS for å unngå inline onclick
+        leggTilKnapp.onclick = leggTilFilm;
+        visFilmerKnapp.onclick = visFilmer;
 
-    // Extra functionality: Sort movies by title
-    const sortButton = document.createElement('button');
-    sortButton.textContent = 'Sorter filmer etter tittel';
-    sortButton.style.marginTop = '10px';
-    document.body.appendChild(sortButton);
+        // Oppretter en ny knapp for å sortere filmer
+        sorterKnapp.textContent = 'Sorter filmer etter årstall';
+        sorterKnapp.style.marginTop = '10px';
+        document.body.appendChild(sorterKnapp);
 
-    sortButton.addEventListener('click', () => {
-        movies.sort((a, b) => a.title.localeCompare(b.title));
-        displayMovies();
-    });
-
-       
-        
+        // Legger til funksjon for sortering
+        sorterKnapp.onclick = sorterFilmer;
     </script>
-    
 </body>
 </html>
