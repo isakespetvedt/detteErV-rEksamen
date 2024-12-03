@@ -18,8 +18,6 @@
         .car {
             position: absolute;
             height: 50px;
-            top: 25%;
-            transform: translateY(-50%);
         }
         #car1 {
             top: 25%;
@@ -32,83 +30,68 @@
 <body>
     <h1>Racing Game</h1>
     <div id="track">
-        <img id="car1" src="images/blue-car.png" class="car" style="left: 0;">
-        <img id="car2" src="images/red-car.png" class="car" style="left: 0;">
+        <img id="car1" src="car1.png" class="car" style="left: 0;">
+        <img id="car2" src="car2.png" class="car" style="left: 0;">
     </div>
     <div style="text-align: center; margin-top: 20px;">
-        <button id="start-race">Start Race</button>
-        <button id="reset-race">Reset</button>
+        <button id="start-race" onclick="startRace()">Start Race</button>
+        <button id="reset-race" onclick="resetRace()">Reset</button>
         <p id="winner-message"></p>
     </div>
 
     <script>
-        // Select elements
-        const car1 = document.getElementById("car1");
-        const car2 = document.getElementById("car2");
-        const startButton = document.getElementById("start-race");
-        const resetButton = document.getElementById("reset-race");
+        // Select elements using getElementsByTagName
+        const cars = document.getElementsByTagName("img");
         const winnerMessage = document.getElementById("winner-message");
 
-        // Track width to determine race completion
-        const trackWidth = document.getElementById("track").offsetWidth - car1.offsetWidth;
-
         // Initialize race data
-        let car1Position = 0;
-        let car2Position = 0;
-        let raceInterval;
+        let positions = [0, 0]; // Array to track car positions
+        const trackWidth = 800 - cars[0].offsetWidth;
 
-        // Function to move cars forward randomly
-        function moveCars() {
-            const car1Speed = Math.random() * 10; // Random speed for car 1
-            const car2Speed = Math.random() * 10; // Random speed for car 2
-
-            car1Position += car1Speed;
-            car2Position += car2Speed;
-
-            // Update car positions on the track
-            car1.style.left = `${car1Position}px`;
-            car2.style.left = `${car2Position}px`;
-
-            // Check for winner
-            if (car1Position >= trackWidth || car2Position >= trackWidth) {
-                clearInterval(raceInterval); // Stop the race
-                determineWinner();
-            }
+        // Function to move a car and return its new position
+        function moveCar(position) {
+            const speed = Math.random() * 10; // Random speed
+            return position + speed;
         }
 
-        // Function to determine and display the winner
-        function determineWinner() {
-            if (car1Position >= trackWidth && car2Position >= trackWidth) {
+        // Start Race function
+        function startRace() {
+            winnerMessage.textContent = ""; // Clear winner message
+            const interval = setInterval(() => {
+                // Update positions using moveCar
+                positions[0] = moveCar(positions[0]);
+                positions[1] = moveCar(positions[1]);
+
+                // Update car positions on the track
+                cars[0].style.left = `${positions[0]}px`;
+                cars[1].style.left = `${positions[1]}px`;
+
+                // Check for winner
+                if (positions[0] >= trackWidth || positions[1] >= trackWidth) {
+                    clearInterval(interval);
+                    declareWinner();
+                }
+            }, 50);
+        }
+
+        // Reset race function
+        function resetRace() {
+            positions = [0, 0]; // Reset positions
+            cars[0].style.left = "0px";
+            cars[1].style.left = "0px";
+            winnerMessage.textContent = ""; // Clear winner message
+        }
+
+        // Function to declare the winner
+        function declareWinner() {
+            if (positions[0] >= trackWidth && positions[1] >= trackWidth) {
                 winnerMessage.textContent = "It's a tie!";
-            } else if (car1Position >= trackWidth) {
+            } else if (positions[0] >= trackWidth) {
                 winnerMessage.textContent = "Car 1 wins!";
-            } else if (car2Position >= trackWidth) {
+            } else {
                 winnerMessage.textContent = "Car 2 wins!";
             }
-
-            startButton.disabled = false; // Re-enable the start button
         }
-
-        // Function to reset the race
-        function resetRace() {
-            clearInterval(raceInterval);
-            car1Position = 0;
-            car2Position = 0;
-            car1.style.left = "0";
-            car2.style.left = "0";
-            winnerMessage.textContent = "";
-            startButton.disabled = false; // Re-enable the start button
-        }
-
-        // Event listener for starting the race
-        startButton.addEventListener("click", () => {
-            winnerMessage.textContent = ""; // Clear any previous message
-            startButton.disabled = true; // Disable the start button during the race
-            raceInterval = setInterval(moveCars, 50); // Start the race
-        });
-
-        // Event listener for resetting the race
-        resetButton.addEventListener("click", resetRace);
     </script>
 </body>
 </html>
