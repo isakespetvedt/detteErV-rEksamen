@@ -51,14 +51,14 @@
 
       }
 
-      #cat1 {
+      #fluffycat {
         position: absolute;
         top: 30%;
         left: 14%;
         transform: scaleX(-1);
       }
 
-      #cat2 {
+      #nissecat {
         position: absolute;
         top: 60%;
         left: 12%;
@@ -96,12 +96,12 @@
       <!-- Cats health bars -->
       <div id="cats-health-bars">
         <div class="healthbar-container">
-          <div id="cat1-health" class="healthbar"></div>
-          <img class="img" id="cat1" src="/images/cat.jpg" alt="Cat1" />
+          <div id="fluffycat-health" class="healthbar"></div>
+          <img class="img" id="fluffycat" src="/images/cat.jpg" alt="fluffycat" />
         </div>
         <div class="healthbar-container">
-          <div id="cat2-health" class="healthbar"></div>
-          <img class="img" id="cat2" src="images/cat.png" alt="Cat2" />
+          <div id="nissecat-health" class="healthbar"></div>
+          <img class="img" id="nissecat" src="images/cat.png" alt="nissecat" />
         </div>
       </div>
 
@@ -130,42 +130,42 @@
 
       // Update health bars visually and hide elements if their health is 0
       function updateHealthbars() {
-        const cat1Healthbar = document.getElementById("cat1-health");
-        const cat2Healthbar = document.getElementById("cat2-health");
+        const fluffycatHealthbar = document.getElementById("fluffycat-health");
+        const nissecatHealthbar = document.getElementById("nissecat-health");
         const babyHealthbar = document.getElementById("baby-health");
 
         // Update widths
-        cat1Healthbar.style.width = (cats[0].hp / cats[0].maxHp) * 100 + "%";
-        cat2Healthbar.style.width = (cats[1].hp / cats[1].maxHp) * 100 + "%";
+        fluffycatHealthbar.style.width = (cats[0].hp / cats[0].maxHp) * 100 + "%";
+        nissecatHealthbar.style.width = (cats[1].hp / cats[1].maxHp) * 100 + "%";
         babyHealthbar.style.width = (baby.hp / baby.maxHp) * 100 + "%";
 
         // Hide elements if health reaches 0
         if (cats[0].hp <= 0) {
-          document.getElementById("cat1").style.display = "none";
+          document.getElementById("fluffycat").style.display = "none";
         }
 
         if (cats[1].hp <= 0) {
-          document.getElementById("cat2").style.display = "none";
+          document.getElementById("nissecat").style.display = "none";
         }
 
         if (baby.hp <= 0) {
           document.getElementById("Baby").style.display = "none";
         }
 
-        updateHealthRatio();
+        updateHealthNummer();
 
-        function updateHealthRatio(){
-            const cat1Ratio = `${cats[0].hp} / ${cats[0].maxHp}`;
-            document.getElementById("cat1-health").textContent = cat1Ratio;
+        function updateHealthNummer(){
+            const fluffycatNummer = `Mittens ${cats[0].hp} / ${cats[0].maxHp}` ;
+            document.getElementById("fluffycat-health").textContent = fluffycatNummer;
 
-            // Update cat2's health ratio
-            const cat2Ratio = `${cats[1].hp} / ${cats[1].maxHp}`;
-             document.getElementById("cat2-health").textContent = cat2Ratio;
+            // Update nissecat's health Nummer
+            const nissecatNummer = `Keneth ${cats[1].hp} / ${cats[1].maxHp}`;
+             document.getElementById("nissecat-health").textContent = nissecatNummer;
              
 
-             // Update baby's health ratio
-             const babyRatio = `${baby.hp} / ${baby.maxHp}`;
-            document.getElementById("baby-health").textContent = babyRatio;
+             // Update baby's health Nummer
+             const babyNummer = `Arcum Asylum Baby ${baby.hp} / ${baby.maxHp}`;
+            document.getElementById("baby-health").textContent = babyNummer;
         }
 
         if (cats[0].hp <= 0 && cats[1].hp <= 0) {
@@ -180,10 +180,10 @@
           // Make the reset button visible
           document.getElementById("reset-btn").style.display = "none";
 
-          // Optional: Automatically reset the game after a delay
+         //resetter spillet etter 2 serkunder
           setTimeout(() => {
             resetGame();
-          }, 2000); // 2-second delay
+          }, 2000); // 2
         }
         if (baby.hp <= 0) {
           console.log("Arcum Asylum Baby is defeated!");
@@ -258,11 +258,11 @@
   // Attach event handlers using element.onclick
   document.getElementById("reset-btn").onclick = resetGame;
 
-  document.getElementById("cat1").onclick = function () {
+  document.getElementById("fluffycat").onclick = function () {
     catAttack(0);
   };
 
-  document.getElementById("cat2").onclick = function () {
+  document.getElementById("nissecat").onclick = function () {
     catAttack(1);
   };
 

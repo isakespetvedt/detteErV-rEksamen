@@ -97,7 +97,7 @@
         bygning: document.getElementById("gnidliub-x"),
       };
 
-      if (gifts[giftName] || remainingGifts > 0) {
+      if (gifts[giftName] && remainingGifts > 0) {
         const gift = gifts[giftName];
 
         if (!givenGifts.includes(gift)) {
@@ -114,8 +114,8 @@
         } else {
           alert("Denne gaven er allerede gitt til babyen!");
         }
-      } else {
-        alert(`${giftName} er ikke blant de 3 gavene du kan gi babyen.`);
+      }else{
+        alert(`${giftName} er ikke en gyldig gave`);
       }
 
       // Clear the input field
