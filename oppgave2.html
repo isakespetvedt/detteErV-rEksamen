@@ -11,11 +11,84 @@
 
         <!--  LEGG TIL HTML-koden som trengs for å løse oppgaven! -->
         <h3>Legg til filmer</h3>
+    <label for="movie-title">Film tittel:</label>
+    <input type="text" id="movie-title" placeholder="Skriv inn filmens tittel">
+    <br>
+    <label for="movie-year">År:</label>
+    <input type="text" id="movie-year" placeholder="Skriv inn utgivelsesåret">
+    <br>
+    <button id="add-movie-btn">Legg til film i array</button>
+    <button id="show-movies-btn">Vis alle filmer</button>
+    <div id="error-message" style="color: red; margin-top: 10px;"></div>
+    <div id="movies-list" style="margin-top: 20px;"></div>
 
 
     </div>
 
-    <script>// HER SKAL DU KODE JAVASCRIPT (IKKE I EKSTERN FIL)!
+    <script> 
+    // Array to store movie objects
+    const movies = [];
+
+    // Function to add a movie
+    function addMovie() {
+        const titleInput = document.getElementById('movie-title');
+        const yearInput = document.getElementById('movie-year');
+        const errorMessage = document.getElementById('error-message');
+
+        const title = titleInput.value.trim();
+        const year = yearInput.value.trim();
+
+        // Input validation
+        if (!title || !year) {
+            errorMessage.textContent = "Vennligst fyll ut både tittel og år!";
+            return;
+        }
+
+        // Clear error message
+        errorMessage.textContent = '';
+
+        // Add movie to array
+        movies.push({ title, year });
+
+        // Clear inputs
+        titleInput.value = '';
+        yearInput.value = '';
+    }
+
+    // Function to display all movies
+    function displayMovies() {
+        const moviesList = document.getElementById('movies-list');
+        moviesList.innerHTML = ''; // Clear previous list
+
+        if (movies.length === 0) {
+            moviesList.textContent = "Ingen filmer lagt til.";
+            return;
+        }
+
+        const ul = document.createElement('ul');
+        movies.forEach(movie => {
+            const li = document.createElement('li');
+            li.textContent = `${movie.title} (${movie.year})`;
+            ul.appendChild(li);
+        });
+
+        moviesList.appendChild(ul);
+    }
+
+    // Attach event listeners to buttons
+    document.getElementById('add-movie-btn').addEventListener('click', addMovie);
+    document.getElementById('show-movies-btn').addEventListener('click', displayMovies);
+
+    // Extra functionality: Sort movies by title
+    const sortButton = document.createElement('button');
+    sortButton.textContent = 'Sorter filmer etter tittel';
+    sortButton.style.marginTop = '10px';
+    document.body.appendChild(sortButton);
+
+    sortButton.addEventListener('click', () => {
+        movies.sort((a, b) => a.title.localeCompare(b.title));
+        displayMovies();
+    });
 
        
         
