@@ -44,19 +44,19 @@
             const år = årInput.value.trim();
             const kategori = kategoriInput.value.trim();
 
-            // Validering av feltene
+            // Dette vil da validere feltene
             if (tittel === '' || år === '' || kategori === '') {
-                feilmelding.textContent = "Vennligst fyll ut tittel, år og kategori!";
+                feilmelding.textContent = "Vennligst fyll ut tittel, år og kategori! (denne bekjeden vil forsvinner etter 3 sekunder";
                 // Feilmelding forsvinner etter 3 sekunder
                 setTimeout(function() {
                     feilmelding.textContent = '';
                 }, 3000);
             } else {
-                // Fjerner feilmelding og legger til filmen i arrayet
+                // Fjerner feilmelding og legger til filmen i arrayet 
                 feilmelding.textContent = '';
                 filmer.push({ tittel: tittel, år: år, kategori: kategori });
 
-                // Tømmer inputfeltene etter at filmen er lagt til
+                // Tømmer inputfeltene etter at filmen er lagt til 
                 tittelInput.value = '';
                 årInput.value = '';
                 kategoriInput.value = '';
