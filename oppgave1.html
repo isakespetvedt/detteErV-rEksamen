@@ -97,7 +97,7 @@
         bygning: document.getElementById("gnidliub-x"),
       };
 
-      if (gifts[giftName] && remainingGifts > 0) {
+      if (gifts[giftName] || remainingGifts > 0) {
         const gift = gifts[giftName];
 
         if (!givenGifts.includes(gift)) {
