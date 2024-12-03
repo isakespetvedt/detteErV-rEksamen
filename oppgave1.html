@@ -35,8 +35,11 @@
 
     <script> 
 
-     // Initialize the number of gifts left to give
-     let remainingGifts = 3;
+// Initialize the number of gifts left to give
+let remainingGifts = 3;
+
+// Keep track of the positions of the gifts
+let givenGifts = [];
 
 // Function to update the "Antall ting igjen" text
 function updateRemainingGifts() {
@@ -44,28 +47,57 @@ function updateRemainingGifts() {
     remainingText.textContent = `Antall ting igjen å gi babyen: ${remainingGifts}`;
 }
 
+// Function to position the gift dynamically
+function positionGift(gift) {
+    const baseLeft = 200; // Starting bottom position
+    const spacing = 200; // Spacing between gifts
+    const positionIndex = givenGifts.length; // Index determines position
+
+    gift.style.bottom = '20px'
+    gift.style.left = `${baseLeft + positionIndex * spacing}px`;
+}
+
 // Function to give the baby one gift
 function giveGift() {
     const giftInput = document.getElementById('gft-txt');
     const giftName = giftInput.value.trim().toLowerCase(); // Get the input and normalize it
-    const baby = document.getElementById('jlpb');
-
-    // Map input values to corresponding gift elements
     const gifts = {
         'katt': document.getElementById('tac-x'),
         'skilpadde': document.getElementById('eddap-x'),
         'bygning': document.getElementById('gnidliub-x'),
     };
 
-    if (gifts[giftName] && remainingGifts > 0) {
-        // Place the gift near the baby
-        const gift = gifts[giftName];
-        gift.style.bottom = '150px';
-        gift.style.left = '300px';
-        remainingGifts--;
+    // Function to show happiness effect
+    function showHappiness() {
+    const baby = document.getElementById('jlpb');
 
-        // Update the remaining gift count
-        updateRemainingGifts();
+    // Add a scale animation
+    baby.style.transition = 'transform 0.5s';
+    baby.style.transform = 'scale(1.2)'; // Slightly enlarge the baby
+
+    // Reset back to normal after the animation
+    setTimeout(() => {
+        baby.style.transform = 'scale(1)';
+    }, 500);
+}
+   
+    if (gifts[giftName] && remainingGifts > 0) {
+        const gift = gifts[giftName];
+
+        if (!givenGifts.includes(gift)) {
+            // Position the gift dynamically and add to the given gifts
+            positionGift(gift);
+            givenGifts.push(gift);
+
+            // Show the happiness effect
+            showHappiness();
+
+            // Decrease the remaining gift count
+            remainingGifts--;
+            updateRemainingGifts();
+        } else {
+            alert("Denne gaven er allerede gitt til babyen!");
+        }
     } else {
         alert("Ugyldig gave eller ingen flere gaver igjen!");
     }
@@ -79,9 +111,10 @@ function resetGifts() {
     const gifts = ['tac-x', 'eddap-x', 'gnidliub-x'];
     gifts.forEach(id => {
         const gift = document.getElementById(id);
-        gift.style.bottom = '0';
-        gift.style.left = '0';
+        gift.style.bottom = ''; // Reset to default
+        gift.style.left = '';   // Reset to default
     });
+    givenGifts = []; // Clear the given gifts list
     remainingGifts = 3;
     updateRemainingGifts();
 }
