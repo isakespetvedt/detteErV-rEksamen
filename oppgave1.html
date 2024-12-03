@@ -127,18 +127,17 @@
       giftInput.value = "";
     }
 
-    // Function to reset the gifts
     function resetGifts() {
-      const gifts = ["tac-x", "eddap-x", "gnidliub-x"];
-      gifts.forEach((id) => {
-        const gift = document.getElementById(id);
-        gift.style.bottom = ""; // Reset to default
-        gift.style.left = ""; // Reset to default
-      });
-      givenGifts = []; // Clear the given gifts list
-      remainingGifts = 3;
-      updateRemainingGifts();
-    }
+  const gifts = ["tac-x", "eddap-x", "gnidliub-x"];
+  for (let i = 0; i < gifts.length; i++) {
+    const gift = document.getElementById(gifts[i]);
+    gift.style.bottom = ""; // Reset to default
+    gift.style.left = ""; // Reset to default
+  }
+  givenGifts = []; // Clear the given gifts list
+  remainingGifts = 3;
+  updateRemainingGifts();
+}
 
     // Attach event listener to the button
     document
@@ -151,7 +150,7 @@
     resetButton.style.marginTop = "10px";
     document.getElementById("inp").appendChild(resetButton);
 
-    resetButton.addEventListener("click", resetGifts);
+    resetButton.onclick = resetGifts;
 
     // Initialize the remaining gifts text
     updateRemainingGifts();
